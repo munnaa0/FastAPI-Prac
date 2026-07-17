@@ -14,13 +14,15 @@ Dhaka = City("Dhaka", 8900000)
 city_temp: tuple[str, int] = (Dhaka.name, Dhaka.population)
 print(city_temp)
 
-number: int | float = 10.5
+number: int | float = 5
+print(number)
 
 number: int | float = 10.5
+print(number)
 
-numbers: list[int | float] = [1, 2.5, 3, 4.5]
+numbers: list[int | float] = [1, 2.5, 3, 4.5] ## can add any number of int or float in the list
 
-fruits: tuple[str, str, str] = ("apple", "banana", "cherry")
+fruits: tuple[str, str, str] = ("apple", "banana", "cherry") ## need to add more str if more fruits are added
 
 
 users: dict[str, Any] = {
