@@ -1,13 +1,15 @@
 from fastapi import FastAPI
 from scalar_fastapi import get_scalar_api_reference
+from typing import Any
 
 app = FastAPI()
 
 
-@app.get("/shipment")
-def get_shipment():
+@app.get("/shipment/{id}")
+def get_shipment(id: int) -> dict[str, Any]:
     return {
-        "shipment_id": 1235,
+        "shipment_id": id,
+        "weight" : 150.65,
         "shipment_name": "First Shipment",
         "shipment_status": "In Transit",
     }
