@@ -62,6 +62,10 @@ shipments: dict[int, dict[str, Any]] = {
     }
 }
 
+@app.get("/")
+def home() -> dict[str, Any]:
+    return {"message": "Welcome to the Shipment API Homepage!"}
+
 # Order of the endpoints matters, the first one will be checked first, so if you have a more specific endpoint, it should be defined before a more generic one.
 @app.get("/shipment/latest")
 def get_latest_shipment() -> dict[str, Any]:
