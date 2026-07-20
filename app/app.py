@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from scalar_fastapi import get_scalar_api_reference
 from typing import Any
+from fastapi import HtmlResponse
 
 app = FastAPI()
 
@@ -63,8 +64,24 @@ shipments: dict[int, dict[str, Any]] = {
 }
 
 @app.get("/")
-def home() -> dict[str, Any]:
-    return {"message": "Welcome to the Shipment API Homepage!"}
+def home() -> HtmlResponse:
+    return HtmlResponse(
+        """
+        <html>
+            <head>
+                <title>Scalar FastAPI Example</title>
+            </head>
+            <body>
+                <h1>Welcome to the Scalar FastAPI Example!</h1>
+                <p>Use the following endpoints to interact with the shipment data:</p>
+                <ul>
+                    <li><a href="/shipment/latest">Get Latest Shipment</a></li>
+                    <li><a href="/shipment/{id}">Get Shipment by ID</a></li>
+                </ul>
+            </body>
+        </html>
+        """
+    )
 
 # Order of the endpoints matters, the first one will be checked first, so if you have a more specific endpoint, it should be defined before a more generic one.
 @app.get("/shipment/latest")
