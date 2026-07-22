@@ -1,0 +1,55 @@
+//Turned off the default HTML snippets and added Jinja2 snippets for VSCode
+/*
+{
+  "Jinja if": {
+    "prefix": "jif",
+    "body": ["{% if ${1:condition} %}", "  ${0}", "{% endif %}"],
+    "description": "Jinja if block",
+  },
+  "Jinja elif": {
+    "prefix": "jelif",
+    "body": ["{% elif ${1:condition} %}"],
+    "description": "Jinja elif clause",
+  },
+  "Jinja else": {
+    "prefix": "jelse",
+    "body": ["{% else %}"],
+    "description": "Jinja else clause",
+  },
+  "Jinja for": {
+    "prefix": "jfor",
+    "body": ["{% for ${1:item} in ${2:items} %}", "  ${0}", "{% endfor %}"],
+    "description": "Jinja for loop",
+  },
+  "Jinja block": {
+    "prefix": "jblock",
+    "body": ["{% block ${1:name} %}", "  ${0}", "{% endblock %}"],
+    "description": "Jinja block",
+  },
+  "Jinja extends": {
+    "prefix": "jextends",
+    "body": ["{% extends \"${1:base.html}\" %}"],
+    "description": "Jinja extends template",
+  },
+  "Jinja include": {
+    "prefix": "jinclude",
+    "body": ["{% include \"${1:partial.html}\" %}"],
+    "description": "Jinja include template",
+  },
+  "Jinja variable": {
+    "prefix": "jvar",
+    "body": ["{{ ${1:variable} }}"],
+    "description": "Jinja variable expression",
+  },
+  "Jinja set": {
+    "prefix": "jset",
+    "body": ["{% set ${1:name} = ${2:value} %}"],
+    "description": "Jinja set variable",
+  },
+  "Jinja comment": {
+    "prefix": "jcomment",
+    "body": ["{# ${1:comment} #}"],
+    "description": "Jinja comment",
+  },
+}
+*/
