@@ -1,3 +1,6 @@
 {
-  "python.REPL.enableREPLSmartSend": false
+  "python.REPL.enableREPLSmartSend": false,
+  "[html][django-html][handlebars][hbs][mustache][htmlmustache][spacebars][jinja][jinja-html][jinja2][html-hubl][hubl-html][html-nunjucks][njk][nunjucks][twig][askama-html][tera][liquid][jekyll][go-template][go-tmpl][gotemplate][GoTemplate][gohtml][GoHTML][gotmpl][hugo-html]": {
+    "editor.defaultFormatter": "monosans.djlint"
+  }
 }
