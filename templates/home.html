@@ -1,13 +1,25 @@
-{% extends 'layout.html' %}
-<body>
-  <div class="container">
-    <h1>Welcome to Home</h1>
-    <p>This is the root placement template for your FastAPI application.</p>
-    {% for post in posts %}
-      <h2>{{ post.title }}</h2>
-      <p>By {{ post.author }}</p>
-      <p>{{ post.content }}</p>
-      <hr />
-    {% endfor %}
-  </div>
-</body>
+{% extends "layout.html" %}
+{% block content %}
+  {% for post in posts %}
+    <article class="content-section py-3 px-4 mb-4">
+      <div class="d-flex align-items-start gap-4">
+        <img class="rounded-circle article-img flex-shrink-0"
+             src="/static/profile_pics/default.jpg"
+             alt="{{ post.author }}'s profile picture"
+             width="64"
+             height="64"
+             loading="lazy">
+        <div class="flex-grow-1">
+          <div class="article-metadata mb-2">
+            <a class="me-2" href="#">{{ post.author }}</a>
+            <small class="text-body-secondary">{{ post.date_posted }}</small>
+          </div>
+          <h2>
+            <a class="article-title" href="#">{{ post.title }}</a>
+          </h2>
+          <p class="article-content">{{ post.content }}</p>
+        </div>
+      </div>
+    </article>
+  {% endfor %}
+{% endblock content %}

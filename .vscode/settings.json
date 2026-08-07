@@ -1,5 +1,29 @@
 {
   "python.REPL.enableREPLSmartSend": false,
+  "files.associations": {
+    "templates/*.html": "jinja-html"
+  },
+  "emmet.includeLanguages": {
+    "jinja-html": "html"
+  },
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": [
+          "punctuation.definition.variable.begin.django",
+          "punctuation.definition.variable.end.django",
+          "punctuation.definition.tag.begin.django",
+          "punctuation.definition.tag.end.django",
+          "punctuation.accessor.django"
+        ],
+        "settings": { "foreground": "#8BE9FD" }
+      },
+      {
+        "scope": ["variable.other.django"],
+        "settings": { "foreground": "#FFD166" }
+      }
+    ]
+  },
   "[html][django-html][handlebars][hbs][mustache][htmlmustache][spacebars][jinja][jinja-html][jinja2][html-hubl][hubl-html][html-nunjucks][njk][nunjucks][twig][askama-html][tera][liquid][jekyll][go-template][go-tmpl][gotemplate][GoTemplate][gohtml][GoHTML][gotmpl][hugo-html]": {
     "editor.defaultFormatter": "monosans.djlint"
   }
