@@ -1,7 +1,8 @@
-from fastapi import FastAPI, Request
-from scalar_fastapi import get_scalar_api_reference
 from typing import Any
+
+from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
+from scalar_fastapi import get_scalar_api_reference
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -163,7 +164,8 @@ posts: list[dict] = [
 @app.get("/posts", include_in_schema=False)
 def home(request: Request):
     return templates.TemplateResponse(
-        request, "home.html", {"posts": posts}, {"title": "Hello"}
+        "home.html",
+        {"request": request, "posts": posts, "title": "Hello"},
     )
 
 
