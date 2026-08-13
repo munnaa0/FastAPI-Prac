@@ -1,11 +1,12 @@
-from typing import Any
-
+from typing import Any  # noqa: I001
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from scalar_fastapi import get_scalar_api_reference
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 shipments: dict[int, dict[str, Any]] = {
     125: {
@@ -164,8 +165,9 @@ posts: list[dict] = [
 @app.get("/posts", include_in_schema=False)
 def home(request: Request):
     return templates.TemplateResponse(
+        request,
         "home.html",
-        {"request": request, "posts": posts, "title": "Hello"},
+        {"posts": posts, "title": "Hello"},
     )
 
 
