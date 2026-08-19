@@ -161,8 +161,8 @@ posts: list[dict] = [
 ]
 
 
-@app.get("/")
-@app.get("/posts", include_in_schema=False)
+@app.get("/", include_in_schema=False, name="home")
+@app.get("/posts", include_in_schema=False, name="posts")
 def home(request: Request):
     return templates.TemplateResponse(
         request,
