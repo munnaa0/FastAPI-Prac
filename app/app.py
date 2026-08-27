@@ -174,3 +174,11 @@ def home(request: Request):
 @app.get("/api/posts")
 def return_posts():
     return posts
+
+
+@app.get("/api/posts/{post_id}")
+def retun_post(post_id: int):
+    for post in posts:
+        if post.get("id") == post_id:
+            return post
+    return {"error": "Post Not FOund"}
