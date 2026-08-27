@@ -1,5 +1,5 @@
 from typing import Any  # noqa: I001
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from scalar_fastapi import get_scalar_api_reference
@@ -181,4 +181,4 @@ def retun_post(post_id: int):
     for post in posts:
         if post.get("id") == post_id:
             return post
-    return {"error": "Post Not FOund"}
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
