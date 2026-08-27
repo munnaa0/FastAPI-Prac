@@ -181,4 +181,6 @@ def retun_post(post_id: int):
     for post in posts:
         if post.get("id") == post_id:
             return post
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail="Post Not Found :("
+    )
