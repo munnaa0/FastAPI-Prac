@@ -166,6 +166,7 @@ def home(request: Request):
     )
 
 
+@app.get("/posts")
 @app.get("/api/posts")
 def return_posts():
     return posts
