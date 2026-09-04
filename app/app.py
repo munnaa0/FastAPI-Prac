@@ -167,6 +167,7 @@ def home(request: Request):
 
 
 ## route to get the details of a specific post by its ID
+@app.get("/{post_id}")
 @app.get("/posts/{post_id}", name="post_details")
 def post_details(request: Request, post_id: int):
     for post in posts:
