@@ -155,6 +155,7 @@ posts: list[dict] = [
 ]
 
 
+## route to render the home page with a list of posts
 @app.get("/", include_in_schema=False, name="home")
 @app.get("/posts", include_in_schema=False, name="posts")
 def home(request: Request):
@@ -165,6 +166,7 @@ def home(request: Request):
     )
 
 
+## route to get the details of a specific post by its ID
 @app.get("/posts/{post_id}", name="post_details")
 def post_details(request: Request, post_id: int):
     for post in posts:
@@ -173,14 +175,22 @@ def post_details(request: Request, post_id: int):
             return templates.TemplateResponse(
                 request, "post.html", {"post": post, "title": title}
             )
+    return templates.TemplateResponse(
+        request,
+        "error.html",
+        {"message": "Sorry The post isn't on our Servers"},
+        status_code=status.HTTP_404_NOT_FOUND,
+    )
 
 
+## route to return all posts as JSON
 @app.get("/posts")
 @app.get("/api/posts")
 def return_posts():
     return posts
 
 
+## route to return a specific post by its ID as JSON
 @app.get("/api/posts/{post_id}")
 def retun_post(post_id: int):
     for post in posts:
