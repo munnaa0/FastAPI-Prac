@@ -165,7 +165,7 @@ def home(request: Request):
     )
 
 
-@app.get("/posts/{post_id}")
+@app.get("/posts/{post_id}", name="post_details")
 def post_details(request: Request, post_id: int):
     for post in posts:
         if post.get("id") == post_id:
