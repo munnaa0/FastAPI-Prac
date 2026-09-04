@@ -165,6 +165,16 @@ def home(request: Request):
     )
 
 
+@app.get("/posts/{post_id}")
+def post_details(request: Request, post_id: int):
+    for post in posts:
+        if post.get("id") == post_id:
+            title = post["title"][:50]
+            return templates.TemplateResponse(
+                request, "post.html", {"post": post, "title": title}
+            )
+
+
 @app.get("/posts")
 @app.get("/api/posts")
 def return_posts():
