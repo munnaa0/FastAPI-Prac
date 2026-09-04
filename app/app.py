@@ -2,7 +2,6 @@ from typing import Any  # noqa: I001
 from fastapi import FastAPI, Request, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from scalar_fastapi import get_scalar_api_reference
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
