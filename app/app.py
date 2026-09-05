@@ -73,14 +73,6 @@ def get_latest_shipment() -> dict[str, Any]:
     return shipments[id]
 
 
-@app.get("/shipment/{id}")
-def get_shipment(id: int) -> dict[str, Any]:
-    if id not in shipments:
-        return {"error": "Shipment not found"}
-    else:
-        return shipments[id]
-
-
 posts: list[dict] = [
     {
         "id": 4821,
