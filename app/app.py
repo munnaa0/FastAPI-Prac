@@ -1,4 +1,3 @@
-from typing import Any  # noqa: I001
 from fastapi import FastAPI, Request, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -6,64 +5,6 @@ from fastapi.templating import Jinja2Templates
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-shipments: dict[int, dict[str, Any]] = {
-    125: {
-        "weight": 120.65,
-        "shipment_name": "First Shipment",
-        "shipment_status": "In Transit",
-    },
-    126: {
-        "weight": 45.0,
-        "shipment_name": "Books Order",
-        "shipment_status": "Delivered",
-    },
-    127: {
-        "weight": 78.25,
-        "shipment_name": "Electronics Batch",
-        "shipment_status": "Pending",
-    },
-    128: {
-        "weight": 5.5,
-        "shipment_name": "Sample Packet",
-        "shipment_status": "In Transit",
-    },
-    129: {
-        "weight": 250.0,
-        "shipment_name": "Furniture Crate",
-        "shipment_status": "Delivered",
-    },
-    130: {
-        "weight": 12.75,
-        "shipment_name": "Clothing Box",
-        "shipment_status": "In Transit",
-    },
-    131: {
-        "weight": 300.4,
-        "shipment_name": "Industrial Parts",
-        "shipment_status": "Pending",
-    },
-    132: {
-        "weight": 0.95,
-        "shipment_name": "Accessory",
-        "shipment_status": "Delivered",
-    },
-    133: {
-        "weight": 67.3,
-        "shipment_name": "Kitchenware",
-        "shipment_status": "In Transit",
-    },
-    134: {
-        "weight": 19.9,
-        "shipment_name": "Cosmetics",
-        "shipment_status": "Delivered",
-    },
-    135: {
-        "weight": 142.0,
-        "shipment_name": "Outdoor Gear",
-        "shipment_status": "Pending",
-    },
-}
 
 
 posts: list[dict] = [
