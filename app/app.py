@@ -66,13 +66,6 @@ shipments: dict[int, dict[str, Any]] = {
 }
 
 
-# Order of the endpoints matters, the first one will be checked first, so if you have a more specific endpoint, it should be defined before a more generic one.
-@app.get("/shipment/latest", include_in_schema=False)
-def get_latest_shipment() -> dict[str, Any]:
-    id: int = max(shipments.keys())
-    return shipments[id]
-
-
 posts: list[dict] = [
     {
         "id": 4821,
