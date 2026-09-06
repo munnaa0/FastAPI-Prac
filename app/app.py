@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from schemas import PostCreate, PostResponse
+
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -93,8 +95,8 @@ def home(request: Request):
 
 
 ## route to get the details of a specific post by its ID
-@app.get("/{post_id}")
-@app.get("/posts/{post_id}", name="post_details")
+@app.get("/{post_id}", include_in_schema=False)
+@app.get("/posts/{post_id}", name="post_details", include_in_schema=False)
 def post_details(request: Request, post_id: int):
     for post in posts:
         if post.get("id") == post_id:
@@ -111,14 +113,28 @@ def post_details(request: Request, post_id: int):
 
 
 ## route to return all posts as JSON
-@app.get("/posts")
-@app.get("/api/posts")
+@app.get("/api/posts", response_model=list[PostResponse])
 def return_posts():
     return posts
 
 
+@app.post("/api/posts", response_model=PostCreate, status_code=status.HTTP_201_CREATED)
+def post_create(post: PostCreate):
+    new_id = max(p["id"] for p in posts) + 1 if posts else 1
+    new_post = {
+        "id": new_id,
+        "author": post.author,
+        "title": post.title,
+        "content": post.content,
+        "date_posted": "6 Sept 2026",
+    }
+    posts.append(new_post)
+
+    return new_post
+
+
 ## route to return a specific post by its ID as JSON
-@app.get("/api/posts/{post_id}")
+@app.get("/api/posts/{post_id}", response_model=PostResponse)
 def retun_post(post_id: int):
     for post in posts:
         if post.get("id") == post_id:
