@@ -89,7 +89,7 @@ def home(request: Request):
     return templates.TemplateResponse(
         request,
         "home.html",
-        {"posts": posts, "title": "Hello"},
+        {"posts": posts, "title": "FastAPI Blog Home"},
     )
 
 
