@@ -17,3 +17,6 @@ build-backend = "setuptools.build_meta"
 
 [tool.djlint]
 ignore = "H030,H020"
+
+[tool.ruff.lint]
+ignore = ["I001"]
