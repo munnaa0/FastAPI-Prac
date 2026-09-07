@@ -1,7 +1,7 @@
+from .schemas import PostCreate, PostResponse
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from schemas import PostCreate, PostResponse
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
