@@ -1,12 +1,14 @@
 from typing import Annotated
-from .schemas import PostCreate, PostResponse, UserResponse, UserCreate
+
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-import models
-from database import Base, engine, get_db
+
+from . import models
+from .database import Base, engine, get_db
+from .schemas import PostCreate, PostResponse, UserCreate, UserResponse
 
 Base.metadata.create_all(bind=engine)
 
