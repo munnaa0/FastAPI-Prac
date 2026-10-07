@@ -12,6 +12,7 @@ class UserCreate(UserBase):
 
 
 class UserResponse(UserBase):
+    # Lets Pydantic build this schema directly from a database model's attributes.
     model_config = ConfigDict(from_attributes=True)
 
     id: int
@@ -29,6 +30,7 @@ class PostCreate(PostBase):
 
 
 class PostResponse(PostBase):
+    # Lets Pydantic build this schema directly from a database model's attributes.
     model_config = ConfigDict(from_attributes=True)
 
     id: int

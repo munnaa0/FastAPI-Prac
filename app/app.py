@@ -14,6 +14,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+# These mounts expose uploaded media and frontend assets separately from API routes.
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/media", StaticFiles(directory="media"), name="media")
 
@@ -22,7 +23,7 @@ templates = Jinja2Templates(directory="templates")
 DbDep = Annotated[Session, Depends(get_db)]
 
 
-## route to render the home page with a list of posts
+# Keep both URLs available so templates can link to a readable collection path.
 @app.get("/", include_in_schema=False, name="home")
 @app.get("/posts", include_in_schema=False, name="posts")
 def home(request: Request, db: DbDep):
@@ -37,7 +38,8 @@ def home(request: Request, db: DbDep):
     )
 
 
-## route to get the details of a specific post by its ID
+# The short route preserves the existing public URL; the prefixed route is clearer
+# when generating links from templates.
 @app.get("/{post_id}", include_in_schema=False)
 @app.get("/posts/{post_id}", name="post_details", include_in_schema=False)
 def post_details(request: Request, post_id: int, db: DbDep):
@@ -128,7 +130,6 @@ def get_user_posts(user_id: int, db: DbDep):
     return posts
 
 
-## route to return all posts as JSON
 @app.get("/api/posts", response_model=list[PostResponse])
 def return_posts(db: DbDep):
     result = db.execute(select(models.Post))
@@ -152,7 +153,6 @@ def create_post(post: PostCreate, db: DbDep):
     return new_post
 
 
-## route to return a specific post by its ID as JSON
 @app.get("/api/posts/{post_id}", response_model=PostResponse)
 def retun_post(post_id: int, db: DbDep):
     result = db.execute(select(models.Post).where(models.Post.id == post_id))
