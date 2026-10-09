@@ -14,13 +14,13 @@
                     <div class="article-metadata mb-2">
                         <a class="me-2"
                            href="{{ url_for('user_posts', user_id=post.author.id) }}">{{ post.author.username }}</a>
-                        <small class="text-body-secondary">{{ post.date_posted.strftime("%B %d, %Y") }}</small>
+                        <small class="text-body-secondary">{{ post.date_posted | friendly_date }}</small>
                     </div>
                     <h2>
                         <a class="article-title"
-                           href="{{ url_for('post_page', post_id=post.id) }}">{{ post.title }}</a>
+                           href="{{ url_for('post_details', post_id=post.id) }}">{{ post.title }}</a>
                     </h2>
-                    <p class="article-content">{{ post.content }}</p>
+                    <p class="article-content">{{ post.content | truncate(240) }}</p>
                 </div>
             </div>
         </article>

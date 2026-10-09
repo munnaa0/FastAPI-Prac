@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from . import models
 from .database import Base, engine, get_db
-from .schemas import PostCreate, PostResponse, UserCreate, UserResponse
+from .schemas import PostCreate, PostResponse, UserCreate, UserResponse, friendly_date
 
 Base.metadata.create_all(bind=engine)
 
@@ -19,6 +19,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/media", StaticFiles(directory="media"), name="media")
 
 templates = Jinja2Templates(directory="templates")
+templates.env.filters["friendly_date"] = friendly_date
 
 DbDep = Annotated[Session, Depends(get_db)]
 
@@ -28,7 +29,7 @@ DbDep = Annotated[Session, Depends(get_db)]
 @app.get("/posts", include_in_schema=False, name="posts")
 def home(request: Request, db: DbDep):
 
-    result = db.execute(select(models.Post))
+    result = db.execute(select(models.Post).order_by(models.Post.date_posted.desc(), models.Post.id.desc()))
     posts = result.scalars().all()
 
     return templates.TemplateResponse(
@@ -47,7 +48,7 @@ def post_details(request: Request, post_id: int, db: DbDep):
     post = result.scalars().first()
 
     if post:
-        title = post["title"][:50]
+        title = post.title[:50]
         return templates.TemplateResponse(
             request, "post.html", {"post": post, "title": title}
         )
@@ -68,7 +69,11 @@ def user_posts_page(request: Request, user_id: int, db: DbDep):
             status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found"
         )
 
-    result = db.execute(select(models.Post).where(models.Post.user_id == user_id))
+    result = db.execute(
+        select(models.Post)
+        .where(models.Post.user_id == user_id)
+        .order_by(models.Post.date_posted.desc(), models.Post.id.desc())
+    )
     posts = result.scalars().all()
 
     return templates.TemplateResponse(
@@ -105,9 +110,7 @@ def create_user(user: UserCreate, db: DbDep):
     return new_user
 
 
-app.get("/api/users/{user_id}", response_model=UserResponse)
-
-
+@app.get("/api/users/{user_id}", response_model=UserResponse)
 def get_user(user_id: int, db: DbDep):
     result = db.execute(select(models.User).where(models.User.id == user_id))
     user = result.scalars().first()
@@ -125,19 +128,23 @@ def get_user_posts(user_id: int, db: DbDep):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found"
         )
-    result = db.execute(select(models.Post).where(models.Post.user_id == user_id))
+    result = db.execute(
+        select(models.Post)
+        .where(models.Post.user_id == user_id)
+        .order_by(models.Post.date_posted.desc(), models.Post.id.desc())
+    )
     posts = result.scalars().all()
     return posts
 
 
 @app.get("/api/posts", response_model=list[PostResponse])
 def return_posts(db: DbDep):
-    result = db.execute(select(models.Post))
+    result = db.execute(select(models.Post).order_by(models.Post.date_posted.desc(), models.Post.id.desc()))
     return result.scalars().all()
 
 
 @app.post(
-    "/api/posts", response_model=UserResponse, status_code=status.HTTP_201_CREATED
+    "/api/posts", response_model=PostResponse, status_code=status.HTTP_201_CREATED
 )
 def create_post(post: PostCreate, db: DbDep):
     result = db.execute(select(models.User).where(models.User.id == post.user_id))
@@ -156,7 +163,7 @@ def create_post(post: PostCreate, db: DbDep):
 @app.get("/api/posts/{post_id}", response_model=PostResponse)
 def retun_post(post_id: int, db: DbDep):
     result = db.execute(select(models.Post).where(models.Post.id == post_id))
-    post = result.scalars().all()
+    post = result.scalars().first()
     if post:
         return post
     raise HTTPException(
