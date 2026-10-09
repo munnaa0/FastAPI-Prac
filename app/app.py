@@ -8,26 +8,32 @@ from sqlalchemy.orm import Session
 
 from . import models
 from .database import Base, engine, get_db
-from .schemas import PostCreate, PostResponse, UserCreate, UserResponse
+from .schemas import PostCreate, PostResponse, UserCreate, UserResponse, friendly_date
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+# These mounts expose uploaded media and frontend assets separately from API routes.
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/media", StaticFiles(directory="media"), name="media")
 
 templates = Jinja2Templates(directory="templates")
+templates.env.filters["friendly_date"] = friendly_date
 
 DbDep = Annotated[Session, Depends(get_db)]
 
 
-## route to render the home page with a list of posts
+# Keep both URLs available so templates can link to a readable collection path.
 @app.get("/", include_in_schema=False, name="home")
 @app.get("/posts", include_in_schema=False, name="posts")
 def home(request: Request, db: DbDep):
 
-    result = db.execute(select(models.Post))
+    result = db.execute(
+        select(models.Post).order_by(
+            models.Post.date_posted.desc(), models.Post.id.desc()
+        )
+    )
     posts = result.scalars().all()
 
     return templates.TemplateResponse(
@@ -37,7 +43,8 @@ def home(request: Request, db: DbDep):
     )
 
 
-## route to get the details of a specific post by its ID
+# The short route preserves the existing public URL; the prefixed route is clearer
+# when generating links from templates.
 @app.get("/{post_id}", include_in_schema=False)
 @app.get("/posts/{post_id}", name="post_details", include_in_schema=False)
 def post_details(request: Request, post_id: int, db: DbDep):
@@ -45,7 +52,7 @@ def post_details(request: Request, post_id: int, db: DbDep):
     post = result.scalars().first()
 
     if post:
-        title = post["title"][:50]
+        title = post.title[:50]
         return templates.TemplateResponse(
             request, "post.html", {"post": post, "title": title}
         )
@@ -66,7 +73,11 @@ def user_posts_page(request: Request, user_id: int, db: DbDep):
             status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found"
         )
 
-    result = db.execute(select(models.Post).where(models.Post.user_id == user_id))
+    result = db.execute(
+        select(models.Post)
+        .where(models.Post.user_id == user_id)
+        .order_by(models.Post.date_posted.desc(), models.Post.id.desc())
+    )
     posts = result.scalars().all()
 
     return templates.TemplateResponse(
@@ -103,9 +114,7 @@ def create_user(user: UserCreate, db: DbDep):
     return new_user
 
 
-app.get("/api/users/{user_id}", response_model=UserResponse)
-
-
+@app.get("/api/users/{user_id}", response_model=UserResponse)
 def get_user(user_id: int, db: DbDep):
     result = db.execute(select(models.User).where(models.User.id == user_id))
     user = result.scalars().first()
@@ -123,20 +132,27 @@ def get_user_posts(user_id: int, db: DbDep):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found"
         )
-    result = db.execute(select(models.Post).where(models.Post.user_id == user_id))
+    result = db.execute(
+        select(models.Post)
+        .where(models.Post.user_id == user_id)
+        .order_by(models.Post.date_posted.desc(), models.Post.id.desc())
+    )
     posts = result.scalars().all()
     return posts
 
 
-## route to return all posts as JSON
 @app.get("/api/posts", response_model=list[PostResponse])
 def return_posts(db: DbDep):
-    result = db.execute(select(models.Post))
+    result = db.execute(
+        select(models.Post).order_by(
+            models.Post.date_posted.desc(), models.Post.id.desc()
+        )
+    )
     return result.scalars().all()
 
 
 @app.post(
-    "/api/posts", response_model=UserResponse, status_code=status.HTTP_201_CREATED
+    "/api/posts", response_model=PostResponse, status_code=status.HTTP_201_CREATED
 )
 def create_post(post: PostCreate, db: DbDep):
     result = db.execute(select(models.User).where(models.User.id == post.user_id))
@@ -152,11 +168,10 @@ def create_post(post: PostCreate, db: DbDep):
     return new_post
 
 
-## route to return a specific post by its ID as JSON
 @app.get("/api/posts/{post_id}", response_model=PostResponse)
 def retun_post(post_id: int, db: DbDep):
     result = db.execute(select(models.Post).where(models.Post.id == post_id))
-    post = result.scalars().all()
+    post = result.scalars().first()
     if post:
         return post
     raise HTTPException(
