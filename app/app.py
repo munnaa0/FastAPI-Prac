@@ -29,7 +29,11 @@ DbDep = Annotated[Session, Depends(get_db)]
 @app.get("/posts", include_in_schema=False, name="posts")
 def home(request: Request, db: DbDep):
 
-    result = db.execute(select(models.Post).order_by(models.Post.date_posted.desc(), models.Post.id.desc()))
+    result = db.execute(
+        select(models.Post).order_by(
+            models.Post.date_posted.desc(), models.Post.id.desc()
+        )
+    )
     posts = result.scalars().all()
 
     return templates.TemplateResponse(
@@ -139,7 +143,11 @@ def get_user_posts(user_id: int, db: DbDep):
 
 @app.get("/api/posts", response_model=list[PostResponse])
 def return_posts(db: DbDep):
-    result = db.execute(select(models.Post).order_by(models.Post.date_posted.desc(), models.Post.id.desc()))
+    result = db.execute(
+        select(models.Post).order_by(
+            models.Post.date_posted.desc(), models.Post.id.desc()
+        )
+    )
     return result.scalars().all()
 
 
