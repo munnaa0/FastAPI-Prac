@@ -1,5 +1,14 @@
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from datetime import UTC, datetime
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_serializer
+
+
+def friendly_date(value: datetime | None) -> str:
+    # SQLite drops the timezone, so naive values are UTC.
+    if value is None:
+        return ""
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=UTC)
+    return value.astimezone().strftime("%b %d, %Y at %I:%M %p")
 
 
 class UserBase(BaseModel):
@@ -37,3 +46,7 @@ class PostResponse(PostBase):
     user_id: int
     date_posted: datetime
     author: UserResponse
+
+    @field_serializer("date_posted")
+    def serialize_date_posted(self, value: datetime) -> str:
+        return friendly_date(value)
