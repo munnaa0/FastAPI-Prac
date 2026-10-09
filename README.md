@@ -1,6 +1,7 @@
 # FastAPI Blog
 
-A small FastAPI blog application that renders Jinja2 pages and exposes a JSON API for posts. Posts are stored in memory, so data resets whenever the server restarts.
+A small FastAPI blog: Jinja2 HTML pages on the front, a JSON API underneath,
+SQLite through SQLAlchemy for storage.
 
 ## Requirements
 
@@ -8,12 +9,10 @@ A small FastAPI blog application that renders Jinja2 pages and exposes a JSON AP
 
 ## Setup
 
-Create and activate a virtual environment, then install the dependencies:
-
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install fastapi uvicorn jinja2
+pip install -e .
 ```
 
 Start the development server from the project root:
@@ -22,41 +21,63 @@ Start the development server from the project root:
 uvicorn app.app:app --reload
 ```
 
-Open <http://127.0.0.1:8000> in a browser. Interactive API documentation is available at <http://127.0.0.1:8000/docs>.
+- Site: <http://127.0.0.1:8000>
+- API docs: <http://127.0.0.1:8000/docs>
+
+Tables are created on startup. Point `DATABASE_URL` at another SQLite file to
+use a different database; it defaults to `./blog.db`.
 
 ## Routes
 
 ### HTML pages
 
-- `GET /` or `GET /posts` - Display all posts.
-- `GET /{post_id}` or `GET /posts/{post_id}` - Display one post.
+- `GET /` or `GET /posts` - all posts, newest first
+- `GET /{post_id}` or `GET /posts/{post_id}` - one post (404 page if missing)
+- `GET /users/{user_id}/posts` - one user's posts
 
 ### JSON API
 
-- `GET /api/posts` - Return all posts.
-- `GET /api/posts/{post_id}` - Return one post.
-- `POST /api/posts` - Create a post.
+- `POST /api/users` - create a user (`201`, `400` if username or email is taken)
+- `GET /api/users/{user_id}` - one user
+- `GET /api/posts` - all posts, newest first
+- `POST /api/posts` - create a post (`201`)
+- `GET /api/posts/{post_id}` - one post
+- `GET /api/{user_id}/posts` - one user's posts
 
-Example request:
+Creating a post requires an existing `user_id`:
 
 ```json
 {
-  "author": "Alex",
+  "user_id": 1,
   "title": "My first post",
   "content": "Hello from the FastAPI blog."
 }
 ```
 
-## Project Structure
+## Layout
 
 ```text
-app/app.py             FastAPI application and routes
-templates/             Jinja2 HTML templates
-static/                CSS, JavaScript, icons, and profile pictures
-schemas.py             Pydantic request and response models
-pyproject.toml         Tool configuration
+app/app.py         routes, templates, mounts
+app/database.py    engine, session factory, get_db dependency
+app/models.py      User and Post tables
+app/schemas.py     Pydantic request/response models, friendly_date
+templates/         Jinja2 HTML templates
+static/            CSS, JavaScript, icons
+media/             uploaded profile pictures
+notes/             scratch files
+tests/             smoke tests
 ```
+
+## Tests
+
+```powershell
+pytest tests -q
+ruff check app
+```
+
+Tests set `DATABASE_URL` to a temp file before importing the app, so
+`blog.db` is never touched.
 
 ## Notes
 
-Authentication links and some frontend behavior are placeholders. The app currently uses an in-memory list instead of a database.
+No authentication yet - posts are created by passing any `user_id`.
