@@ -58,6 +58,7 @@ def test_create_and_read_post(client, user):
     assert body["author"]["username"] == "alex"
 
     assert client.get(f"/api/posts/{body['id']}").json()["title"] == "T"
+    assert client.get(f"/api/users/{user['id']}/posts").json()[0]["title"] == "T"
     assert client.get("/api/posts/999999").status_code == 404
     assert client.get("/api/users/999999").status_code == 404
 
