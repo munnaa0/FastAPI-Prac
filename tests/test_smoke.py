@@ -5,13 +5,13 @@ import tempfile
 
 _TMP_DIR = tempfile.mkdtemp(prefix="blog-tests-")
 # Must be set before importing app.database, since the engine is built at import.
-os.environ["DATABASE_URL"] = f"sqlite:///{_TMP_DIR}/test.db"
+os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{_TMP_DIR}/test.db"
 
 import pytest
 from fastapi.testclient import TestClient
 
 from app.app import app
-from app.database import SQLALCHEMY_DATABASE_URL, Base, engine
+from app.database import SQLALCHEMY_DATABASE_URL, engine
 
 
 def test_never_uses_the_real_database():
@@ -19,14 +19,9 @@ def test_never_uses_the_real_database():
     assert "blog.db" not in str(engine.url)
 
 
-@pytest.fixture(scope="module", autouse=True)
-def _tables():
-    # A fresh temp file, so create_all is enough and no drop is ever needed.
-    Base.metadata.create_all(bind=engine)
-
-
 @pytest.fixture(scope="module")
 def client():
+    # Lifespan creates the tables in the temp file, so no fixture is needed.
     with TestClient(app) as c:
         yield c
 
