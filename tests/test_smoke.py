@@ -81,6 +81,15 @@ def test_missing_post_page_404s(client):
     assert client.get("/posts/999999").status_code == 404
 
 
+def test_post_page_renders_the_post_forms(client, user):
+    post_id = client.get("/api/posts").json()[0]["id"]
+    text = client.get(f"/posts/{post_id}").text
+    # New Post modal lives in layout.html, the edit/delete ones in post.html.
+    assert 'id="createPostForm"' in text
+    assert 'id="editPostForm"' in text
+    assert 'id="confirmDelete"' in text
+
+
 def test_posts_are_newest_first(client, user):
     ids = []
     for title in ("first", "second", "third"):
