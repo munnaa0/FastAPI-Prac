@@ -42,7 +42,7 @@ use a different database; it defaults to `./blog.db`.
 - `GET /api/posts` - all posts, newest first
 - `POST /api/posts` - create a post (`201`)
 - `GET /api/posts/{post_id}` - one post
-- `GET /api/{user_id}/posts` - one user's posts
+- `GET /api/users/{user_id}/posts` - one user's posts
 
 Creating a post requires an existing `user_id`:
 
