@@ -4,6 +4,13 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
+*.egg-info/
+
+# local database and uploaded media
+*.db
+media/*
+!media/profile_pics/
+!media/profile_pics/default.jpg
 
 # Local agent guidance, not shared with the repo
 AGENTS.md

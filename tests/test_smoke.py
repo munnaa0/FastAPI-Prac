@@ -28,7 +28,10 @@ def client():
 
 @pytest.fixture(scope="module")
 def user(client):
-    r = client.post("/api/users", json={"username": "alex", "email": "a@b.com"})
+    r = client.post(
+        "/api/users",
+        json={"username": "alex", "email": "a@b.com", "password": "correct-horse"},
+    )
     assert r.status_code == 201, r.text
     return r.json()
 
@@ -41,8 +44,8 @@ def test_create_user_returns_default_image(client, user):
 @pytest.mark.parametrize(
     "payload",
     [
-        {"username": "alex", "email": "other@b.com"},  # username taken
-        {"username": "other", "email": "a@b.com"},  # email taken
+        {"username": "alex", "email": "other@b.com", "password": "correct-horse"},
+        {"username": "other", "email": "a@b.com", "password": "correct-horse"},
     ],
 )
 def test_duplicate_user_rejected(client, user, payload):
