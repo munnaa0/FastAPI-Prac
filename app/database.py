@@ -1,11 +1,15 @@
 import os
+from pathlib import Path
 from typing import Annotated
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./blog.db")
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+DEFAULT_DATABASE_URL = f"sqlite+aiosqlite:///{(PROJECT_DIR / 'blog.db').as_posix()}"
+
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_DATABASE_URL)
 
 engine = create_async_engine(
     SQLALCHEMY_DATABASE_URL,

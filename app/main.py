@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.staticfiles import StaticFiles
@@ -9,7 +10,10 @@ from sqlalchemy.orm import selectinload
 from . import models
 from .database import Base, DbDep, engine
 from .routers import posts, users
-from .schemas import friendly_date
+from .utils import friendly_date
+
+APP_DIR = Path(__file__).resolve().parent
+PROJECT_DIR = APP_DIR.parent
 
 
 @asynccontextmanager
@@ -23,10 +27,10 @@ async def lifespan(_app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 # These mounts expose uploaded media and frontend assets separately from API routes.
-app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/media", StaticFiles(directory="media"), name="media")
+app.mount("/static", StaticFiles(directory=APP_DIR / "static"), name="static")
+app.mount("/media", StaticFiles(directory=PROJECT_DIR / "media"), name="media")
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory=APP_DIR / "templates")
 templates.env.filters["friendly_date"] = friendly_date
 
 app.include_router(users.router, prefix="/api/users", tags=["users"])
