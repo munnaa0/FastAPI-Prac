@@ -13,7 +13,7 @@ class User(Base):
     username: Mapped[String] = mapped_column(String(50), unique=True, nullable=False)
     email: Mapped[String] = mapped_column(String(50), unique=True, nullable=False)
     password_hash: Mapped[String] = mapped_column(
-        String(500), unique=False, nullable=False
+        String(500), unique=False, nullable=False, default=""
     )
     image_file: Mapped[str | None] = mapped_column(String(200), nullable=True)
 
