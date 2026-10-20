@@ -1,9 +1,15 @@
+from pathlib import Path
+
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=PROJECT_DIR / ".env", env_file_encoding="utf-8"
+    )
 
     secret_key: SecretStr
     algorithm: str = "HS256"
