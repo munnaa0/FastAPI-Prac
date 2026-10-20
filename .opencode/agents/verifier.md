@@ -39,7 +39,7 @@ Data safety rules (non-negotiable):
   `./blog.db`. The development database must survive your run untouched.
 - Never import the app in a context where `DATABASE_URL` points at
   `./blog.db`. Tests are expected to point it at a temporary file before import.
-- Confirm `tests/test_smoke.py::test_never_uses_the_real_database` still exists
+- Confirm `tests/test_database.py::test_never_uses_the_real_database` still exists
   and passes. Report if it was removed or skipped.
 
 Report exactly this, with the real command output for anything that failed:
