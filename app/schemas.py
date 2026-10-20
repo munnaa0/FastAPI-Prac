@@ -1,14 +1,7 @@
-from datetime import UTC, datetime
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_serializer
 
-
-def friendly_date(value: datetime | None) -> str:
-    # SQLite drops the timezone, so naive values are UTC.
-    if value is None:
-        return ""
-    if value.tzinfo is None:
-        value = value.replace(tzinfo=UTC)
-    return value.astimezone().strftime("%b %d, %Y at %I:%M %p")
+from .utils import friendly_date
 
 
 class UserBase(BaseModel):
@@ -17,22 +10,32 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    pass
+    password: str = Field(min_length=8)
 
 
-class UserResponse(UserBase):
+class UserPublic(BaseModel):
     # Lets Pydantic build this schema directly from a database model's attributes.
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    username: str
     image_file: str | None
     image_path: str
+
+
+class UserPrivate(UserPublic):
+    email: EmailStr
 
 
 class UserUpdate(BaseModel):
     username: str | None = Field(default=None, min_length=2, max_length=50)
     email: EmailStr | None = Field(default=None, max_length=50)
     image_file: str | None = Field(default=None, min_length=1, max_length=200)
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
 
 class PostBase(BaseModel):
@@ -56,7 +59,7 @@ class PostResponse(PostBase):
     id: int
     user_id: int
     date_posted: datetime
-    author: UserResponse
+    author: UserPublic
 
     @field_serializer("date_posted")
     def serialize_date_posted(self, value: datetime) -> str:

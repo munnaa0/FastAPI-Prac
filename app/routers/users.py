@@ -4,12 +4,12 @@ from sqlalchemy.orm import selectinload
 
 from .. import models
 from ..database import DbDep
-from ..schemas import PostResponse, UserCreate, UserResponse, UserUpdate
+from ..schemas import PostResponse, UserCreate, UserPrivate, UserUpdate
 
 router = APIRouter()
 
 
-@router.post("", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=UserPrivate, status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserCreate, db: DbDep):
     result = await db.execute(
         select(models.User).where(models.User.username == user.username)
@@ -36,7 +36,7 @@ async def create_user(user: UserCreate, db: DbDep):
     return new_user
 
 
-@router.get("/{user_id}", response_model=UserResponse)
+@router.get("/{user_id}", response_model=UserPrivate)
 async def get_user(user_id: int, db: DbDep):
     result = await db.execute(select(models.User).where(models.User.id == user_id))
     user = result.scalars().first()
@@ -64,7 +64,7 @@ async def get_user_posts(user_id: int, db: DbDep):
     return posts
 
 
-@router.patch("/{user_id}", response_model=UserResponse)
+@router.patch("/{user_id}", response_model=UserPrivate)
 async def update_user(user_id: int, user_update: UserUpdate, db: DbDep):
     result = await db.execute(select(models.User).where(models.User.id == user_id))
     user = result.scalars().first()
