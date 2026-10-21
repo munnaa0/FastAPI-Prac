@@ -21,8 +21,17 @@
       {
         "scope": ["variable.other.django"],
         "settings": { "foreground": "#FFD166" }
+      },
+      {
+        "scope": ["entity.name.namespace", "punctuation.separator.period.python"],
+        "settings": { "foreground": "#FFCA80" }
       }
     ]
+  },
+  "editor.semanticTokenColors": {
+    "variable": "#80FFEA",
+    "namespace": "#FFCA80",
+    "parameter": "#FFCA80"
   },
   "[html][django-html][handlebars][hbs][mustache][htmlmustache][spacebars][jinja][jinja-html][jinja2][html-hubl][hubl-html][html-nunjucks][njk][nunjucks][twig][askama-html][tera][liquid][jekyll][go-template][go-tmpl][gotemplate][GoTemplate][gohtml][GoHTML][gotmpl][hugo-html]": {
     "editor.defaultFormatter": "monosans.djlint"
