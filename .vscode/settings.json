@@ -25,13 +25,20 @@
       {
         "scope": ["entity.name.namespace", "punctuation.separator.period.python"],
         "settings": { "foreground": "#FFCA80" }
+      },
+      {
+        "scope": ["variable", "variable.other.readwrite"],
+        "settings": { "foreground": "#80FFEA" }
       }
     ]
   },
-  "editor.semanticTokenColors": {
-    "variable": "#80FFEA",
-    "namespace": "#FFCA80",
-    "parameter": "#FFCA80"
+  "editor.semanticTokenColorCustomizations": {
+    "enabled": true,
+    "rules": {
+      "variable": "#80FFEA",
+      "namespace": "#FFCA80",
+      "parameter": "#FFCA80"
+    }
   },
   "[html][django-html][handlebars][hbs][mustache][htmlmustache][spacebars][jinja][jinja-html][jinja2][html-hubl][hubl-html][html-nunjucks][njk][nunjucks][twig][askama-html][tera][liquid][jekyll][go-template][go-tmpl][gotemplate][GoTemplate][gohtml][GoHTML][gotmpl][hugo-html]": {
     "editor.defaultFormatter": "monosans.djlint"
