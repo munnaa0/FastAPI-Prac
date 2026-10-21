@@ -23,7 +23,10 @@
         "settings": { "foreground": "#FFD166" }
       },
       {
-        "scope": ["entity.name.namespace", "punctuation.separator.period.python"],
+        "scope": [
+          "entity.name.namespace",
+          "punctuation.separator.period.python"
+        ],
         "settings": { "foreground": "#FFCA80" }
       },
       {
@@ -35,7 +38,7 @@
   "editor.semanticTokenColorCustomizations": {
     "enabled": true,
     "rules": {
-      "variable": "#80FFEA",
+      "variable": "#d0e14e",
       "namespace": "#FFCA80",
       "parameter": "#FFCA80"
     }
